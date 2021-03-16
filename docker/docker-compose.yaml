@@ -1,0 +1,30 @@
+version: '3'
+services:
+  app_database:
+    image: mariadb
+    restart: always
+    environment:
+      - MYSQL_DATABASE=appdb
+      - MYSQL_USER=spring
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=dbpassword
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db_data:/var/lib/mysql
+  app:
+    depends_on:
+      - app_database
+    build:
+      context: ./..
+      dockerfile: docker/Dockerfile
+    ports:
+      - 8081:8081
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://app_database:3306/appdb
+      SPRING_DATASOURCE_USERNAME: spring
+      SPRING_DATASOURCE_PASSWORD: password
+      KEYCLOAK_SERVER_AUTH_URL: http://iamserver:8080/auth
+volumes:
+  db_data:
+    driver: local
