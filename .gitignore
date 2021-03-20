@@ -38,3 +38,4 @@ out/
 
 ### Docker setup ###
 docker/db_data
+docker/iam_db_data
