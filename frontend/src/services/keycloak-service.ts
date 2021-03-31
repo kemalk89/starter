@@ -10,10 +10,10 @@ const KeycloakService = () => {
         url: 'http://localhost:8080/auth'
     };
 
-    keycloak = Keycloak(keycloakConf);
-
     return {
         async init(): Promise<User|null> {
+            keycloak = Keycloak(keycloakConf);
+
             const isAuthenticated = await keycloak.init({ onLoad: 'login-required' });
             if (isAuthenticated) {
                 const keycloakProfile = await keycloak.loadUserProfile();
