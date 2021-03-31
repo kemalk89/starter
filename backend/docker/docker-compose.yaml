@@ -2,7 +2,7 @@ version: '3'
 services:
   # Identity Access Management
   iam_db:
-    image: postgres
+    image: postgres:13.2
     volumes:
       - ./iam_db_data:/var/lib/postgresql/data
     environment:
@@ -20,13 +20,16 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /tmp/realm-export.json
+    volumes:
+      - ./keycloak/realm-export.json:/tmp/realm-export.json
     depends_on:
       - iam_db
     ports:
       - 8080:8080
   # App
   app_db:
-    image: mariadb
+    image: mariadb:10.5.9
     restart: always
     environment:
       - MYSQL_DATABASE=appdb
