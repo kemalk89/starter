@@ -2,6 +2,9 @@
 This repository is basically a skeleton project providing some preconfigurations to
 getting quickly started with a react frontend and a spring boot backend.
 
+# Differentiation to JHipster
+TODO
+
 # Technology stack
 The spring boot backend is connected to a mariadb.
 We are using keycloak for identity and access management. Keycloak is connected to a postgresql database.
@@ -29,6 +32,7 @@ We are using keycloak for identity and access management. Keycloak is connected 
 # Getting started
 ## Backend
 Simply run the following commands to get started:
+
 0. Install and start docker
 1. ``cd backend/docker``
 2. ``docker-compose up app_db iam`` > This will start all the infrastructure
