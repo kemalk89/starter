@@ -6,6 +6,7 @@ getting quickly started with a react frontend and a spring boot backend.
 Work in progress
 - no generator
 - you can use any backend technology (e.g. PHP, C#, Java, NodeJs, ...)
+- you only get a skeleton, the rest is up to you 
 
 # Technology stack
 The spring boot backend is connected to a mariadb.
