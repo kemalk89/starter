@@ -3,7 +3,9 @@ This repository is basically a skeleton project providing some preconfigurations
 getting quickly started with a react frontend and a spring boot backend.
 
 # Differentiation to JHipster
-TODO
+Work in progress
+- no generator
+- you can use any backend technology (e.g. PHP, C#, Java, NodeJs, ...)
 
 # Technology stack
 The spring boot backend is connected to a mariadb.
