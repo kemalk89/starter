@@ -6,6 +6,7 @@ export type User = {
     firstname: string;
     surname: string;
     roles: string[];
+    token: string;
 };
 
 type Config = {

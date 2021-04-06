@@ -4,9 +4,9 @@ getting quickly started with a react frontend and a spring boot backend.
 
 # Differentiation to JHipster
 Work in progress
-- no generator
-- you can use any backend technology (e.g. PHP, C#, Java, NodeJs, ...)
-- you only get a skeleton, the rest is up to you 
+- This is not a generator but skeleton
+- You can use any backend technology (e.g. PHP, C#, Java, NodeJs, ...)
+- You only get a skeleton, the rest is up to you
 
 # Technology stack
 The spring boot backend is connected to a mariadb.
@@ -31,6 +31,9 @@ We are using keycloak for identity and access management. Keycloak is connected 
 |---|---|
 |Keycloak|12.0.4|
 |PostgreSQL|13.2|
+
+# Getting started
+``docker-compose -f keycloak/docker-compose.yaml -f backend/docker/docker-compose.yaml up``
 
 # Getting started
 ## Backend

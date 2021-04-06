@@ -22,7 +22,8 @@ const KeycloakService = () => {
                     username: keycloakProfile.username!,
                     firstname: keycloakProfile.firstName || '',
                     surname: keycloakProfile.lastName || '',
-                    roles: keycloak.realmAccess?.roles || []
+                    roles: keycloak.realmAccess?.roles || [],
+                    token: keycloak.token!
                 };
             }
 

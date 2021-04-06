@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 import KeycloakService from './services/keycloak-service';
 import { User, UserDataContext } from './contexts/user-data-context';
@@ -13,7 +12,18 @@ function App() {
     keycloakService.init().then(result => {
       if (result != null) {
         setUser(result);
+
+        fetch('/api/users', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + result.token
+          }
+        })
+        .then(r => r.json())
+        .then(r => console.log(r));
       }
+
     });
   }, []);
 
