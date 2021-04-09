@@ -26,14 +26,17 @@ We are using keycloak for identity and access management. Keycloak is connected 
 |MariaDB|10.5.9|
 |Gradle|6.8.3|
 
-## Identity and Access Management 
+## Keycloak as Identity and Access Management 
 |Dependency|Version|
 |---|---|
 |Keycloak|12.0.4|
 |PostgreSQL|13.2|
 
-# Getting started
-``docker-compose -f keycloak/docker-compose.yaml -f backend/docker/docker-compose.yaml up``
+# Start all components
+Simply run the following commands to get started:
+
+0. Install and start docker
+1. ``sh bootstrap.sh``
 
 # Getting started
 ## Backend
