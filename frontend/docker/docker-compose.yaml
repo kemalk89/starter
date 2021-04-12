@@ -2,7 +2,7 @@ version: '3'
 services:
   frontend:
     build:
-      context: ${FRONTEND_CONTEXT:-./..}
+      context: ./..
       dockerfile: docker/Dockerfile
     ports:
       - 3000:3000

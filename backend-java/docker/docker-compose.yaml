@@ -1,6 +1,6 @@
 version: '3'
 services:
-  app_db:
+  db:
     image: mariadb:10.5.9
     restart: always
     environment:
@@ -16,18 +16,18 @@ services:
       - backend-network
   app:
     depends_on:
-      - app_db
+      - db
     build:
       context: ./..
       dockerfile: docker/Dockerfile
     ports:
       - 8081:8081
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://app_db:3306/appdb
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/appdb
       SPRING_DATASOURCE_USERNAME: spring
       SPRING_DATASOURCE_PASSWORD: password
       KEYCLOAK_SERVER_AUTH_URL: http://localhost:8080/auth # tells keycloak to check JWT issuer against this value
-      KEYCLOAK_PROXY_URL: http://iam:8080/auth # tells keycloak to proxy calls to keycloak running in docker
+      KEYCLOAK_PROXY_URL: http://keycloak:8080/auth # tells keycloak to proxy calls to keycloak running in docker
     restart: on-failure
     networks:
       - backend-network
