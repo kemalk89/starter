@@ -4,7 +4,10 @@ ROOT_PATH=$PWD/..
 cd $ROOT_PATH/keycloak
 docker-compose stop
 
-cd $ROOT_PATH/backend-java/docker
+cd $ROOT_PATH/product-service/docker
+docker-compose stop
+
+cd $ROOT_PATH/reverseproxy
 docker-compose stop
 
 cd $ROOT_PATH/frontend/docker

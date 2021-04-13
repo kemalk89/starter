@@ -13,7 +13,7 @@ function App() {
       if (result != null) {
         setUser(result);
 
-        fetch('/api/users', {
+        fetch('/api/products/2', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -6,3 +6,13 @@ services:
       dockerfile: docker/Dockerfile
     ports:
       - 3000:3000
+    volumes:
+      - './../src:/app/src'
+      - './../public:/app/public'
+    environment: 
+      - CRA_PROXY_TARGET=${CRA_PROXY_TARGET}
+    networks:
+      - backend-network
+networks: 
+  backend-network:
+    name: backend_network

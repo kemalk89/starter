@@ -1,33 +1,33 @@
 version: '3'
 services:
-  db:
+  product-service-db:
     image: mariadb:10.5.9
     restart: always
     environment:
-      - MYSQL_DATABASE=appdb
-      - MYSQL_USER=spring
-      - MYSQL_PASSWORD=password
-      - MYSQL_ROOT_PASSWORD=dbpassword
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_USER_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
     ports:
       - 3306:3306
     volumes:
       - mysqldata:/var/lib/mysql
     networks:
       - backend-network
-  app:
+  product-service:
     depends_on:
-      - db
+      - product-service-db
     build:
       context: ./..
       dockerfile: docker/Dockerfile
     ports:
       - 8081:8081
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/appdb
-      SPRING_DATASOURCE_USERNAME: spring
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_URL: jdbc:mariadb://product-service-db:3306/${DATABASE_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_USER_PASSWORD}
       KEYCLOAK_SERVER_AUTH_URL: http://localhost:8080/auth # tells keycloak to check JWT issuer against this value
-      KEYCLOAK_PROXY_URL: http://keycloak:8080/auth # tells keycloak to proxy calls to keycloak running in docker
+      KEYCLOAK_PROXY_URL: http://keycloak-service:8080/auth # tells keycloak to proxy calls to keycloak running in docker
     restart: on-failure
     networks:
       - backend-network

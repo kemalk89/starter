@@ -1,15 +1,5 @@
 version: '3.8'
 services:
-  nginx:
-    image: nginx:1.19.9-alpine
-    depends_on:
-      - keycloak-service
-    volumes:
-      - ./files/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - 8080:8080
-    networks:
-      - backend-network
   db:
     image: postgres:13.2
     volumes:
@@ -34,6 +24,7 @@ services:
       KEYCLOAK_IMPORT: /tmp/realm-export.json
       # KEYCLOAK_LOGLEVEL: DEBUG
       PROXY_ADDRESS_FORWARDING: "true" # important for reverse proxy
+      JAVA_OPTS: "-server -Xms1024m -Xmx1024m" # assign more memory otherwise container tends to crash
     volumes:
       - ./files/realm-export.json:/tmp/realm-export.json
     depends_on:
