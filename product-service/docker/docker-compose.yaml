@@ -1,5 +1,11 @@
 version: '3'
 services:
+  product-service-db-ui:
+    image: phpmyadmin/phpmyadmin:5.1-fpm
+    ports:
+      - 8082:80
+    environment:
+      - PMA_HOST:http://localhost:3306
   product-service-db:
     image: mariadb:10.5.9
     restart: always

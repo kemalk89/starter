@@ -7,6 +7,9 @@ docker-compose stop
 cd $ROOT_PATH/product-service/docker
 docker-compose stop
 
+cd $ROOT_PATH/order-service/docker
+docker-compose stop
+
 cd $ROOT_PATH/reverseproxy
 docker-compose stop
 

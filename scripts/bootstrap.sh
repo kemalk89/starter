@@ -12,6 +12,11 @@ cd $ROOT_PATH/product-service/docker
 docker-compose build --quiet
 docker-compose up -d --remove-orphans
 
+# build and start backend service
+cd $ROOT_PATH/order-service/docker
+docker-compose build --quiet
+docker-compose up -d --remove-orphans
+
 # start reverse proxy
 cd $ROOT_PATH/reverseproxy
 docker-compose up -d --remove-orphans

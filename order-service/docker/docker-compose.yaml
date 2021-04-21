@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  order-service-db:
+    image: mariadb:10.5.9
+    restart: always
+    environment:
+      - MYSQL_DATABASE=appdb
+      - MYSQL_USER=spring
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=dbpassword
+    volumes:
+      - mysqldata-order-service:/var/lib/mysql
+    ports:
+      - ${DATABASE_PORT_ON_HOST}:3306
+    networks:
+      - backend-network
+  order-service:
+    depends_on:
+      - order-service-db
+    build:
+      context: ./..
+      dockerfile: docker/Dockerfile
+    ports:
+      - ${APPLICATION_PORT}:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://order-service-db:3306/${DATABASE_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_USER_PASSWORD}
+      KEYCLOAK_SERVER_AUTH_URL: ${KEYCLOAK_SERVER_AUTH_URL} # tells keycloak to check JWT issuer against this value
+      KEYCLOAK_PROXY_URL: ${KEYCLOAK_PROXY_URL} # tells keycloak to proxy calls to keycloak running in docker
+    restart: on-failure
+    networks:
+      - backend-network
+volumes:
+  mysqldata-order-service: { }
+networks: 
+  backend-network:
+    name: backend_network

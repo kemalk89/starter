@@ -22,6 +22,16 @@ function App() {
         })
         .then(r => r.json())
         .then(r => console.log(r));
+
+        fetch('/api/orders/1', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + result.token
+          }
+        })
+        .then(r => r.json())
+        .then(r => console.log(r));
       }
 
     });

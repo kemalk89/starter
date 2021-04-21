@@ -14,7 +14,7 @@ public class RestCtrl {
 
     @GetMapping("/api/products/{id}")
     public ResponseEntity<String> getProduct(@PathVariable String id) {
-        return ResponseEntity.ok().body(String.format("Requested Product %s", id));
+        return ResponseEntity.ok().body(String.format("Requested Product has ID %s", id));
     }
 
     @GetMapping("/api/products")
