@@ -32,29 +32,18 @@ We are using keycloak for identity and access management. Keycloak is connected 
 |Keycloak|12.0.4|
 |PostgreSQL|13.2|
 
-# Start all components
-Simply run the following commands to get started:
-
-0. Install and start docker
-1. ``sh bootstrap.sh``
-
 # Getting started
-## Backend
+## Start all
 Simply run the following commands to get started:
 
 0. Install and start docker
-1. ``cd backend/docker``
-2. ``docker-compose up app_db iam`` > This will start all the infrastructure
-3. In your IDE run the application with dev config (VM arguments ``-Dspring.profiles.active=dev``)
-4. Open browser and call ``http://localhost:8081/hello``
-
+1. ``cd scripts``
+2. ``sh bootstrap.sh``
+3. ``cd prepare-keycloak``, ``npm install`` and finally ``node index.js`` (this will init keycloak)
+4. In your browser go to ``localhost:3000``
 ## Keycloak
-Please create users in keycloak and assign them roles (ROLE_ADMIN, ROLE_USER). For that open your
-browser and call ``http://localhost:8080``, login with user ``admin``, password ``admin`` and switch to
-realm ``app``.
-
-## Frontend
-Simply run the following commands to get started:
-1. ``cd frontend``
-2. ``yarn start``
-3. Open browser and call ``http://localhost:3000``
+The script ``prepare-keycloak`` will init keycloak. It will create...
+- 2 users (max.mustermann@test.de, tom.tischler@test.de, pw for both is 123456)
+- 1 client for the web UI
+- 1 client for the backend services
+- roles ADMIN and USER
