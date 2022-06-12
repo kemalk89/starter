@@ -1,14 +1,18 @@
 const KcAdminClient = require('@keycloak/keycloak-admin-client');
 const prompt = require("prompt");
+const fs = require("fs");
 
-const REALM = 'app';
+const confFile = fs.readFileSync(`${__dirname}/config.json`);
+const confJSON = JSON.parse(confFile);
+
+const REALM = confJSON.realmName;
 
 const WEB_UI_REDIRECT_URI = 'http://localhost:3000/';
 
 const kcAdminClient = new KcAdminClient.default();
 kcAdminClient.auth({
-    username: 'admin',
-    password: 'admin',
+    username: confJSON.adminUsername,
+    password: confJSON.adminPw,
     grantType: 'password',
     clientId: 'admin-cli'
 }).then(() => {
@@ -43,65 +47,72 @@ kcAdminClient.auth({
 
         init();
     }).catch(() => console.log('Could not read realms...'));;
-    //skcAdminClient.users.find().then(console.log);
 }).catch(console.log);
 
-function createClient(clientId, options) {
-    console.log(`Creating client "${clientId}"`);
+function createClient(client) {
+    console.log(`Creating client "${client.clientId}"`);
+
     return kcAdminClient.clients.create({
         realm: REALM,
-        clientId,
         protocol: 'openid-connect',
-        ...options
+        ...client,
     }).then(r => {
-        console.log(`Created client "${clientId}", ${JSON.stringify(r)}`);
+        console.log(`Created client "${client.clientId}", ${JSON.stringify(r)}`);
         return r;
     });
 }
 
-function addRoleToUser(role, user) {
-    console.log(`Assign role ${role.roleName} to user ${user.id}`);
+function addRoleToUser(roleList, user) {
+    console.log(`Assign roles ${roleList} to user ${user.id}`);
 
-    return kcAdminClient.roles.findOneByName({
-        realm: REALM,
-        name: role.roleName
-    }).then(r => {
-        return kcAdminClient.users.addRealmRoleMappings({
+    const promises = [];
+    for (let roleName of roleList) {
+        const promise = kcAdminClient.roles.findOneByName({
             realm: REALM,
-            id: user.id,
-            roles: [r]
+            name: roleName
+        }).then(r => {
+            return kcAdminClient.users.addRealmRoleMappings({
+                realm: REALM,
+                id: user.id,
+                roles: [r]
+            });
+        }).then(() => {
+            console.log(`Assigned role "${roleName}" to user ${JSON.stringify(user)}`);
         });
-    }).then(r => {
-        console.log(`Assigned role to user, ${r}`);
-        return r;
-    });
+
+        promises.push(promise);
+    }
+
+    return Promise.all(promises);
 }
 
-function createUser(email) {
-    console.log(`Creating user "${email}"`);
+function createUser(user) {
+    console.log(`Creating user "${user.email}"`);
+
     return kcAdminClient.users.create({
         realm: REALM,
-        username: email,
-        email: email,
+        username: user.email,
+        email: user.email,
         enabled: true,
         credentials: [{
             temporary: false,
-            value: '123456'
+            value: user.password
         }],
     }).then((r) => {
-        console.log(`Created user "${email}", ${JSON.stringify(r)}`);
+        console.log(`Created user "${user.email}", ${JSON.stringify(r)}`);
         return r;
     });
 }
 
-function createRole(roleName, roleDescription) {
-    console.log(`Creating role "${roleName}"`);
+function createRole(role) {
+    console.log(`Creating role "${role.name}"`);
+
     return kcAdminClient.roles.create({
         realm: REALM,
-        name: roleName,
-        description: roleDescription
+        name: role.name,
+        description: role.description
     }).then((r) => {
-        console.log(`Created role "${roleName}", ${JSON.stringify(r)}`);
+        console.log(`Created role "${role.name}", ${JSON.stringify(r)}`);
         return r;
     });
 }
@@ -110,32 +121,37 @@ function init() {
     console.log('Realm "app" does not exist. Will create it.');
 
     kcAdminClient.realms.create({
-        realm: 'app',
+        realm: REALM,
         enabled: true,
     }).then(() => {
-        console.log('Successfully created realm "app"');
+        console.log(`Successfully created realm "${REALM}"`);
 
-        return createClient("app-web-ui", {
-            redirectUris: [WEB_UI_REDIRECT_URI],
-            rootUrl: WEB_UI_REDIRECT_URI
-        });
+        const promises = [];
+        for (let c of confJSON.clients) {
+            const promise = createClient(c);
+            promises.push(promise);
+        }
+
+        return Promise.all(promises);
     }).then((clientAppWebUI) => {
-        return Promise.all([
-            createRole('USER'),
-            createRole('ADMIN'),
-        ]);
-    }).then(([roleUser, roleAdmin]) => {
-        const user1 = createUser('max.mustermann@test.de')
-            .then(u => {
-                return addRoleToUser(roleUser, u);
-            });
+        const promises = [];
+        for (let role of confJSON.roles) {
+            const promise = createRole(role);
+            promises.push(promise);
+        }
 
-        const user2 = createUser('tom.tischler@test.de')
-            .then(u => {
-                return addRoleToUser(roleAdmin, u);
-            });
+        return Promise.all(promises);
+    }).then(() => {
+        const promises = [];
+        for (let user of confJSON.users) {
+            const promise = createUser(user)
+                .then(u => {
+                    return addRoleToUser(user.roles, u);
+                });
+            promises.push(promise);
+        }
 
-        return Promise.all([user1, user2]);
+        return Promise.all(promises);
     }).then(() => {
 
     }).catch(console.log);

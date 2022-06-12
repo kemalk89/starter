@@ -1,0 +1,29 @@
+{
+  "realmName": "app",
+  "adminUsername": "admin",
+  "adminPw": "admin",
+  "clients": [
+    {
+      "clientId": "app-web-ui",
+      "rootUrl": "http://localhost:3000/",
+      "redirectUris": ["http://localhost:3000/"]
+    },
+    {
+      "clientId": "app-backend",
+      "bearerOnly": true
+    }
+  ],
+  "users": [
+    {
+      "email": "max.mustermann@test.de",
+      "password": "123456",
+      "roles": ["USER"]
+    },
+    {
+      "email": "tom.tischler@test.de",
+      "password": "123456",
+      "roles": ["ADMIN"]
+    }
+  ],
+  "roles": [{ "name": "USER" }, { "name": "ADMIN" }]
+}
